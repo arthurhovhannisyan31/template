@@ -1,0 +1,32 @@
+### Healthcheck
+GET {{api_host}}/health
+Accept: application/json
+Content-Type: application/json
+Origin: http://localhost:3000
+
+### Register a user
+POST {{api_host}}/auth/register
+Accept: application/json
+Content-Type: application/json
+
+{
+  "email": "test",
+  "password": "test",
+  "username": "test"
+}
+
+### Login user
+POST {{api_host}}/auth/login
+Accept: application/json
+Content-Type: application/json
+Origin: some
+
+{
+  "email": "test",
+  "password": "test"
+}
+
+### Get data from protected route
+GET {{api_host}}/protected
+Content-Type: application/json
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoxLCJ1c2VybmFtZSI6InRlc3QiLCJleHAiOjE3ODM5NDQyMzh9.X8Lg8Ns7I271W8xoDlLdPDOxAIciM-sa2WrfXNioJG8

@@ -16,3 +16,5 @@ audit:
 	cd modules/backend && cargo audit
 backend:
 	cd modules/backend && cargo run
+cargo-update:
+	cd modules/backend && cargo update
