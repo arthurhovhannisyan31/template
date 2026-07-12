@@ -4,5 +4,4 @@
 
 printf "⚠️ Run pre-push checks\n\n"
 
-# replace with make commands
-#validate_commands "cargo check" "cargo clippy" "configs/scripts/cargo-fmt.sh" "cargo test" "cargo audit"
+validate_commands "make check" "make format-check" "make test" "make audit"

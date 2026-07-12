@@ -4,5 +4,4 @@
 
 printf "⚠️ Run pre-commit checks\n\n"
 
-# repalce with make commands
-#validate_commands "cargo check" "cargo fmt"
+validate_commands "make check" "make format"
