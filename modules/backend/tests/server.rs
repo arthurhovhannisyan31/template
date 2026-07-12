@@ -28,6 +28,7 @@ mod server_test {
     Ok(build_router(auth_state, &app_config))
   }
 
+  #[ignore]
   #[tokio::test]
   async fn test_health_route() -> Result<(), ServerError> {
     let router = setup_router().await?;

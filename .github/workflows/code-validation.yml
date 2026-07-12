@@ -25,4 +25,4 @@ jobs:
           make format-check
       - name: Validate unit tests
         run: |
-          make test
+          make test-ci

@@ -11,6 +11,8 @@ format:
 format-check:
 	cd modules/backend && ../../configs/scripts/cargo-fmt.sh
 test:
+	cd modules/backend && cargo test && cargo test -- --ignored
+test-ci:
 	cd modules/backend && cargo test
 audit:
 	cd modules/backend && cargo audit
