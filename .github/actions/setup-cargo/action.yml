@@ -17,5 +17,5 @@ runs:
           ${{ runner.os }}-cargo-
     - name: Install dependencies
       run: |
-        cargo update
+        make cargo-update
       shell: bash
