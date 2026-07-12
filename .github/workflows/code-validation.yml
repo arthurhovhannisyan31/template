@@ -1,0 +1,28 @@
+name: Code validation
+on:
+  push:
+    branches:
+      - '*'
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  code-validation:
+    name: Code validation
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v7
+      - name: Setup Cargo
+        uses: ./.github/actions/setup-cargo
+      - name: Validate code
+        run: |
+          make check-ci
+      - name: Validate linters
+        run: |
+          make format-check
+      - name: Validate unit tests
+        run: |
+          make test
