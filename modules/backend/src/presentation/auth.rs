@@ -23,7 +23,12 @@ pub fn get_auth_router(state: Arc<AuthState>) -> Router {
     .with_state(state)
 }
 
-async fn login(
+#[utoipa::path(
+  post,
+  path = "/auth/login",
+  responses((status = OK, body = AuthResponse))
+)]
+pub async fn login(
   State(auth_state): State<Arc<AuthState>>,
   Json(payload): Json<AuthRequest>,
 ) -> Result<impl IntoResponse, StatusCode> {
@@ -54,6 +59,11 @@ async fn login(
   )
 }
 
+#[utoipa::path(
+  post,
+  path = "/auth/register",
+  responses((status = OK, body = AuthResponse))
+)]
 async fn register(
   State(app_state): State<Arc<AuthState>>,
   Json(payload): Json<CreateUserRequest>,

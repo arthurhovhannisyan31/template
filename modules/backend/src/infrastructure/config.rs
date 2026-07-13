@@ -14,11 +14,11 @@ pub struct AppConfig {
 
 impl AppConfig {
   pub fn from_env() -> Result<Self, ServerError> {
-    let docker_container = env::var("DOCKER_CONTAINER")
+    let is_docker_container = env::var("DOCKER_CONTAINER")
       .unwrap_or("false".to_owned())
-      .eq("false");
+      .eq("true");
     // Load variables when run locally
-    if docker_container {
+    if !is_docker_container {
       dotenvy::dotenv()?;
     }
 

@@ -4,6 +4,10 @@ Accept: application/json
 Content-Type: application/json
 Origin: http://localhost:3000
 
+### OpenAPI
+GET {{api_host}}/openapi
+Accept: application/json
+
 ### Register a user
 POST {{api_host}}/auth/register
 Accept: application/json

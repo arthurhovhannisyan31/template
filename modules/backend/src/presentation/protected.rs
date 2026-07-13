@@ -13,6 +13,11 @@ pub fn get_protected_router(auth_state: Arc<AuthState>) -> Router {
     .layer(middleware::from_fn_with_state(auth_state, auth))
 }
 
+#[utoipa::path(
+  get,
+  path = "/protected",
+  responses((status = OK, body = Value))
+)]
 async fn protected(
   Extension(authenticated_user): Extension<AuthenticatedUser>,
 ) -> Json<Value> {

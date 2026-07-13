@@ -21,12 +21,12 @@ use presentation::{common::AuthState, init::init_http_server};
 async fn main() -> Result<(), ServerError> {
   init_logging();
 
-  let config = AppConfig::from_env()?;
-  let pool = create_pool(&config.database_url).await?;
+  let app_config = AppConfig::from_env()?;
+  let pool = create_pool(&app_config.database_url).await?;
 
   run_migrations(&pool).await?;
 
-  let jwt_service = JwtService::new(config.jwt_secret.clone());
+  let jwt_service = JwtService::new(app_config.jwt_secret.clone());
   let users_repo = PostgresUserRepository::new(pool.clone());
   let auth_service = AuthService::new(users_repo, jwt_service.clone());
   let auth_state = Arc::new(AuthState {
@@ -34,7 +34,7 @@ async fn main() -> Result<(), ServerError> {
     jwt_service,
   });
 
-  init_http_server(auth_state.clone(), &config).await?;
+  init_http_server(auth_state.clone(), &app_config).await?;
 
   Ok(())
 }

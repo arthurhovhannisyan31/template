@@ -6,3 +6,4 @@ pub mod database;
 pub mod error;
 pub mod jwt;
 pub mod logging;
+pub mod openapi;

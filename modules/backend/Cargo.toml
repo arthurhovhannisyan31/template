@@ -11,10 +11,10 @@ repository = "https://github.com/arthurhovhannisyan31/template"
 anyhow = "1.0"
 axum = { version = "0.8", features = ["macros"] }
 axum-extra = { version = "0.12", features = ["typed-header", "cookie"] }
-axum-test = "21.0"
 argon2 = "0.5"
 async-trait = "0.1"
 chrono = { version = "0.4", features = ["serde"] }
+cookie = "0.18.1"
 dotenvy = "0.15"
 jsonwebtoken = { version = "10", features = ["rust_crypto"] }
 headers = "0.4"
@@ -28,5 +28,7 @@ tower = { version = "0.5", features = ["limit"] }
 tower-http = { version = "0.7", features = ["full"] }
 tracing = "0.1"
 tracing-subscriber = { version = "0.3", features = ["env-filter", "json", "chrono", "time"] }
-cookie = "0.18.1"
+utoipa = { version = "5.5.0", features = ["yaml"] }
 
+[dev-dependencies]
+axum-test = "21.0"
