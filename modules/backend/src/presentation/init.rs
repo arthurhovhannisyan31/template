@@ -1,10 +1,11 @@
-use crate::presentation::{
-  auth::get_auth_router, common::AuthState, health::get_health_router,
-  protected::get_protected_router,
-};
 use crate::{
-  infrastructure::config::AppConfig, infrastructure::cors::build_cors_layer,
-  infrastructure::error::ServerError,
+  infrastructure::{
+    config::AppConfig, cors::build_cors_layer, error::ServerError,
+  },
+  presentation::{
+    auth::get_auth_router, common::AuthState, protected::get_protected_router,
+    utilities::get_utilities_router,
+  },
 };
 
 use axum::Router;
@@ -19,7 +20,7 @@ pub fn build_router(
 ) -> Router {
   let merged_router = Router::new()
     .merge(get_auth_router(auth_state.clone()))
-    .merge(get_health_router())
+    .merge(get_utilities_router())
     .merge(get_protected_router(auth_state.clone()));
 
   Router::new()
