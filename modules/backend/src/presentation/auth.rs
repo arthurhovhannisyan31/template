@@ -49,14 +49,7 @@ pub async fn login(
   })
   .to_string();
 
-  Ok(
-    Response::builder()
-      .status(StatusCode::CREATED)
-      .header("Access-Control-Allow-Credentials", "true")
-      .header(SET_COOKIE, get_auth_cookie(&token).to_string())
-      .body(Body::from(response))
-      .map_err(|err| ApplicationError::Internal(err.to_string()))?,
-  )
+  build_auth_response(token.clone(), response, app_config)
 }
 
 #[utoipa::path(
@@ -94,12 +87,23 @@ async fn register(
   })
   .to_string();
 
-  Ok(
-    Response::builder()
-      .status(StatusCode::CREATED)
-      .header("Access-Control-Allow-Credentials", "true")
-      .header(SET_COOKIE, get_auth_cookie(&token).to_string())
-      .body(Body::from(response))
-      .map_err(|err| ApplicationError::Internal(err.to_string()))?,
-  )
+  build_auth_response(token.clone(), response, app_config)
+}
+
+fn build_auth_response(
+  token: String,
+  response: String,
+  app_config: Arc<AppConfig>,
+) -> Result<impl IntoResponse, ApplicationError> {
+  let response = Response::builder()
+    .status(StatusCode::CREATED)
+    .header("Access-Control-Allow-Credentials", "true")
+    .header(
+      SET_COOKIE,
+      get_auth_cookie(&token, app_config.is_production).to_string(),
+    )
+    .body(Body::from(response))
+    .map_err(|err| ApplicationError::Internal(err.to_string()))?;
+
+  Ok(response)
 }
