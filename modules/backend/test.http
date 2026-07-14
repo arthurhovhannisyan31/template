@@ -1,10 +1,10 @@
-### Healthcheck
+### Check server health
 GET {{api_host}}/health
 Accept: application/json
 Content-Type: application/json
 Origin: http://localhost:3000
 
-### OpenAPI
+### Get OpenAPI specification
 GET {{api_host}}/openapi
 Accept: application/json
 
@@ -26,7 +26,7 @@ Content-Type: application/json
 Origin: some
 
 {
-  "email": "test",
+  "email": "test1",
   "password": "test"
 }
 

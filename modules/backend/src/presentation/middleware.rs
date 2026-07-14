@@ -1,25 +1,27 @@
+use crate::infrastructure::auth::authenticate_user;
+use crate::presentation::state::AppState;
+
 use axum::{
   extract::{Request, State},
   http::{HeaderMap, StatusCode, header},
   middleware::Next,
   response::Response,
 };
-use std::sync::Arc;
-
-use crate::infrastructure::auth::authenticate_user;
-use crate::presentation::common::AuthState;
 
 pub async fn auth(
-  State(auth_state): State<Arc<AuthState>>,
+  State(app_state): State<AppState>,
   headers: HeaderMap,
   mut request: Request,
   next: Next,
 ) -> Result<Response, StatusCode> {
   let token = get_token(&headers).ok_or(StatusCode::UNAUTHORIZED)?;
-  let authenticated_user =
-    authenticate_user(token, &auth_state.jwt_service, &auth_state.auth_service)
-      .await
-      .ok_or(StatusCode::UNAUTHORIZED)?;
+  let authenticated_user = authenticate_user(
+    token,
+    &app_state.auth_state.jwt_service,
+    &app_state.auth_state.auth_service,
+  )
+  .await
+  .ok_or(StatusCode::UNAUTHORIZED)?;
 
   request.extensions_mut().insert(authenticated_user);
   Ok(next.run(request).await)

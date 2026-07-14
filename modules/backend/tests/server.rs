@@ -9,23 +9,27 @@ mod server_test {
     config::AppConfig, database::create_pool, error::ServerError,
     jwt::JwtService,
   };
-  use backend::presentation::{common::AuthState, init::build_router};
+  use backend::presentation::state::AuthState;
+  use backend::presentation::{init::build_router, state::AppState};
   use serde_json::json;
   use std::sync::Arc;
 
   async fn setup_router() -> Result<Router, ServerError> {
     let app_config = AppConfig::from_env()?;
-    let pool = create_pool(&app_config.database_url).await?;
+    let pool = create_pool(&app_config.database_url, 1).await?;
 
     let jwt_service = JwtService::new(app_config.jwt_secret.clone());
     let users_repo = PostgresUserRepository::new(pool.clone());
     let auth_service = AuthService::new(users_repo, jwt_service.clone());
-    let auth_state = Arc::new(AuthState {
-      auth_service,
-      jwt_service,
-    });
+    let app_state = AppState {
+      auth_state: Arc::new(AuthState {
+        auth_service,
+        jwt_service,
+      }),
+      app_config: Arc::new(app_config),
+    };
 
-    Ok(build_router(auth_state, &app_config))
+    Ok(build_router(app_state))
   }
 
   #[ignore]

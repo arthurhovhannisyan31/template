@@ -1,11 +1,13 @@
+use crate::application::error::ApplicationError;
 use crate::infrastructure::openapi::OpenApiSpec;
+use crate::presentation::state::AppState;
 
-use axum::{Router, http::StatusCode, response::Json, routing::get};
+use axum::{Router, response::Json, routing::get};
 use chrono::Utc;
 use serde_json::{Value, json};
 use utoipa::OpenApi;
 
-pub fn get_utilities_router() -> Router {
+pub fn get_utilities_router() -> Router<AppState> {
   Router::new()
     .route("/health", get(health))
     .route("/openapi", get(openapi))
@@ -28,9 +30,9 @@ async fn health() -> Json<Value> {
   path = "/openapi",
   responses((status = OK, body = Value))
 )]
-async fn openapi() -> Result<String, StatusCode> {
+async fn openapi() -> Result<String, ApplicationError> {
   match OpenApiSpec::openapi().to_json() {
     Ok(res) => Ok(res),
-    Err(_) => Err(StatusCode::INTERNAL_SERVER_ERROR),
+    Err(err) => Err(ApplicationError::Internal(err.to_string())),
   }
 }

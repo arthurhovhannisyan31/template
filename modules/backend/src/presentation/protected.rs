@@ -1,16 +1,14 @@
+use crate::presentation::state::AppState;
+use crate::presentation::{dto::AuthenticatedUser, middleware::auth};
+
 use axum::{Extension, Json, Router, middleware, routing::get};
 use chrono::Utc;
 use serde_json::{Value, json};
-use std::sync::Arc;
 
-use crate::presentation::{
-  common::AuthState, dto::AuthenticatedUser, middleware::auth,
-};
-
-pub fn get_protected_router(auth_state: Arc<AuthState>) -> Router {
+pub fn get_protected_router(app_state: AppState) -> Router<AppState> {
   Router::new()
     .route("/protected", get(protected))
-    .layer(middleware::from_fn_with_state(auth_state, auth))
+    .layer(middleware::from_fn_with_state(app_state, auth))
 }
 
 #[utoipa::path(

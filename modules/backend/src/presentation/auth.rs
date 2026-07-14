@@ -1,12 +1,15 @@
 use crate::application::error::ApplicationError;
+use crate::infrastructure::config::AppConfig;
 use crate::presentation::{
-  common::AuthState,
   dto::{AuthRequest, AuthResponse, AuthenticatedUser, CreateUserRequest},
+  state::AppState,
+  state::AuthState,
   utils::get_auth_cookie,
 };
-use axum::body::Body;
+
 use axum::{
   Json, Router,
+  body::Body,
   extract::State,
   http::{Response, StatusCode, header::SET_COOKIE},
   response::IntoResponse,
@@ -16,11 +19,10 @@ use serde_json::json;
 use std::sync::Arc;
 use tracing::info;
 
-pub fn get_auth_router(state: Arc<AuthState>) -> Router {
+pub fn get_auth_router() -> Router<AppState> {
   Router::new()
     .route("/auth/login", post(login))
     .route("/auth/register", post(register))
-    .with_state(state)
 }
 
 #[utoipa::path(
@@ -30,8 +32,9 @@ pub fn get_auth_router(state: Arc<AuthState>) -> Router {
 )]
 pub async fn login(
   State(auth_state): State<Arc<AuthState>>,
+  State(app_config): State<Arc<AppConfig>>,
   Json(payload): Json<AuthRequest>,
-) -> Result<impl IntoResponse, StatusCode> {
+) -> Result<impl IntoResponse, ApplicationError> {
   let token = auth_state
     .auth_service
     .login(&payload.email, &payload.password)
@@ -58,10 +61,11 @@ pub async fn login(
   responses((status = OK, body = AuthResponse))
 )]
 async fn register(
-  State(app_state): State<Arc<AuthState>>,
+  State(auth_state): State<Arc<AuthState>>,
+  State(app_config): State<Arc<AppConfig>>,
   Json(payload): Json<CreateUserRequest>,
-) -> Result<impl IntoResponse, StatusCode> {
-  let user = app_state
+) -> Result<impl IntoResponse, ApplicationError> {
+  let user = auth_state
     .auth_service
     .register(
       payload.email.clone(),
@@ -71,7 +75,7 @@ async fn register(
     .await?;
   info!(user_id = %user.id, email = %user.email, username = %user.username, "user registered");
 
-  let token = app_state
+  let token = auth_state
     .auth_service
     .login(&payload.email, &payload.password)
     .await?;
