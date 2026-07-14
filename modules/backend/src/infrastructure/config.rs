@@ -3,13 +3,15 @@ use crate::infrastructure::error::ServerError;
 use serde::Deserialize;
 use std::env;
 
-#[derive(Debug, Deserialize, Clone)]
+#[derive(Clone, Debug, Deserialize)]
 pub struct AppConfig {
   pub host: String,
   pub http_port: u16,
   pub database_url: String,
   pub jwt_secret: String,
   pub cors_origins: Vec<String>,
+  pub db_max_connections: u32,
+  pub is_production: bool,
 }
 
 impl AppConfig {
@@ -27,7 +29,9 @@ impl AppConfig {
       .unwrap_or_else(|_| "8080".into())
       .parse()
       .map_err(|e| {
-        ServerError::VarError(format!("Invalid SERVER_HTTP_PORT variable: {e}"))
+        ServerError::VarError(format!(
+          "Invalid BACKEND_HTTP_PORT variable: {e}"
+        ))
       })?;
     let database_url = env::var("DATABASE_URL").map_err(|e| {
       ServerError::VarError(format!("Missing DATABASE_URL: {e}"))
@@ -43,6 +47,23 @@ impl AppConfig {
       .map(|s| s.trim().to_string())
       .filter(|s| !s.is_empty())
       .collect();
+    let db_max_connections = env::var("BACKEND_DB_MAX_CONNECTIONS")
+      .map_err(|e| {
+        ServerError::VarError(format!(
+          "Missing BACKEND_DB_MAX_CONNECTIONS: {e}"
+        ))
+      })?
+      .parse::<u32>()
+      .map_err(|e| {
+        ServerError::VarError(format!(
+          "Failed parsing BACKEND_DB_MAX_CONNECTIONS: {e}"
+        ))
+      })?;
+    let is_production = env::var("IS_PRODUCTION")
+      .map_err(|e| {
+        ServerError::VarError(format!("Missing IS_PRODUCTION: {e}"))
+      })?
+      .eq("true");
 
     Ok(Self {
       host,
@@ -50,6 +71,8 @@ impl AppConfig {
       database_url,
       jwt_secret,
       cors_origins,
+      db_max_connections,
+      is_production,
     })
   }
 }
