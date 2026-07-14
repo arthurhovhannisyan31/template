@@ -11,7 +11,7 @@ pub enum DomainError {
   #[error("Post not found: {0}")]
   PostNotFound(u64),
   #[error("User already exists: {0}")]
-  UserAlreadyExists(i64),
+  UserAlreadyExists(String),
   #[error("User not found: {0}")]
   UserNotFound(i64),
   #[error("Validation failed: {0}")]

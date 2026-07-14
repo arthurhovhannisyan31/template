@@ -53,7 +53,7 @@ impl UserRepository for PostgresUserRepository {
           })
           == Some(true)
         {
-          DomainError::UserAlreadyExists(user.id)
+          DomainError::UserAlreadyExists(user.email.clone())
         } else {
           DomainError::Internal(format!("database error: {}", e))
         }

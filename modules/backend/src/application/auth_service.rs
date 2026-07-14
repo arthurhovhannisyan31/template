@@ -29,11 +29,11 @@ where
     &self,
     email: &str,
   ) -> Result<User, ApplicationError> {
-    self
-      .repo
-      .find_by_email(&email.to_lowercase())
-      .await?
-      .ok_or_else(|| ApplicationError::NotFound(format!("user {}", email)))
+    match self.repo.find_by_email(&email.to_lowercase()).await {
+      Ok(Some(user)) => Ok(user),
+      Ok(None) => Err(ApplicationError::NotFound(format!("user {}", email))),
+      Err(err) => Err(err)?,
+    }
   }
 
   pub async fn register(
@@ -54,12 +54,20 @@ where
     email: &str,
     password: &str,
   ) -> Result<String, ApplicationError> {
-    let Ok(user) = self.get_by_email(&email.to_lowercase()).await else {
-      return Err(ApplicationError::Unauthorized);
+    let user = match self.get_by_email(&email.to_lowercase()).await {
+      Ok(user) => user,
+      Err(ApplicationError::NotFound(_)) => {
+        return Err(ApplicationError::Unauthorized);
+      }
+      Err(err) => return Err(err),
     };
 
-    let password_valid = verify_password(password, &user.password_hash)
-      .map_err(|_| ApplicationError::Unauthorized)?;
+    let password_valid = match verify_password(password, &user.password_hash) {
+      Ok(true) => true,
+      Ok(false) => return Err(ApplicationError::Unauthorized),
+      Err(err) => return Err(ApplicationError::Internal(err.to_string())),
+    };
+
     if !password_valid {
       return Err(ApplicationError::Unauthorized);
     }
