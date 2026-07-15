@@ -66,9 +66,9 @@ async fn register(
   info!(user_id = %user.id, email = %user.email, username = %user.username, "user registered");
 
   let token = auth_state
-    .auth_service
-    .login(&payload.email, &payload.password)
-    .await?;
+    .jwt_service
+    .generate_token(user.id, user.username.clone())
+    .map_err(|err| ApplicationError::Internal(err.to_string()))?;
 
   build_auth_response(token.clone(), user, app_config.is_production)
 }
