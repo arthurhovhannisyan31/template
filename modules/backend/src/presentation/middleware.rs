@@ -31,13 +31,6 @@ fn get_token(headers: &HeaderMap) -> Option<&str> {
   let auth_header = headers
     .get(header::AUTHORIZATION)
     .and_then(|value| value.to_str().ok())?;
-  let values = auth_header.split(" ").collect::<Vec<&str>>();
-
-  if values.len() != 2 {
-    return None;
-  }
-
-  let token = values.get(1)?;
-
-  Some(token)
+  let (scheme, token) = auth_header.split_once(" ")?;
+  (scheme.eq_ignore_ascii_case("bearer")).then_some(token)
 }
