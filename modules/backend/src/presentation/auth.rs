@@ -1,10 +1,8 @@
 use crate::application::error::ApplicationError;
-use crate::infrastructure::config::AppConfig;
 use crate::presentation::{
   dto::{AuthRequest, AuthResponse, AuthenticatedUser, CreateUserRequest},
   state::AppState,
   state::AuthState,
-  utils::get_auth_cookie,
 };
 
 use crate::domain::user::User;
@@ -12,7 +10,7 @@ use axum::{
   Json, Router,
   body::Body,
   extract::State,
-  http::{Response, StatusCode, header::SET_COOKIE},
+  http::{Response, StatusCode},
   response::IntoResponse,
   routing::post,
 };
@@ -33,7 +31,6 @@ pub fn get_auth_router() -> Router<AppState> {
 )]
 pub async fn login(
   State(auth_state): State<Arc<AuthState>>,
-  State(app_config): State<Arc<AppConfig>>,
   Json(payload): Json<AuthRequest>,
 ) -> Result<impl IntoResponse, ApplicationError> {
   let token = auth_state
@@ -42,7 +39,7 @@ pub async fn login(
     .await?;
   let user = auth_state.auth_service.get_by_email(&payload.email).await?;
 
-  build_auth_response(token.clone(), user, app_config.is_production)
+  build_auth_response(token.clone(), user)
 }
 
 #[utoipa::path(
@@ -52,7 +49,6 @@ pub async fn login(
 )]
 async fn register(
   State(auth_state): State<Arc<AuthState>>,
-  State(app_config): State<Arc<AppConfig>>,
   Json(payload): Json<CreateUserRequest>,
 ) -> Result<impl IntoResponse, ApplicationError> {
   let user = auth_state
@@ -70,13 +66,12 @@ async fn register(
     .generate_token(user.id, user.username.clone())
     .map_err(|err| ApplicationError::Internal(err.to_string()))?;
 
-  build_auth_response(token.clone(), user, app_config.is_production)
+  build_auth_response(token.clone(), user)
 }
 
 fn build_auth_response(
   token: String,
   user: User,
-  is_production: bool,
 ) -> Result<impl IntoResponse, ApplicationError> {
   let authenticated_user = AuthenticatedUser {
     user_id: user.id,
@@ -91,10 +86,6 @@ fn build_auth_response(
 
   Response::builder()
     .status(StatusCode::CREATED)
-    .header(
-      SET_COOKIE,
-      get_auth_cookie(&token, is_production).to_string(),
-    )
     .body(Body::from(response_body))
     .map_err(|err| ApplicationError::Internal(err.to_string()))
 }

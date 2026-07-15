@@ -26,7 +26,7 @@ Content-Type: application/json
 Origin: some
 
 {
-  "email": "test1",
+  "email": "test",
   "password": "test"
 }
 
