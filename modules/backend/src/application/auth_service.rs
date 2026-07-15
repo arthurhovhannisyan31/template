@@ -54,7 +54,7 @@ where
     email: &str,
     password: &str,
   ) -> Result<String, ApplicationError> {
-    let user = match self.get_by_email(&email.to_lowercase()).await {
+    let user = match self.get_by_email(email).await {
       Ok(user) => user,
       Err(ApplicationError::NotFound(_)) => {
         return Err(ApplicationError::Unauthorized);
