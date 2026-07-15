@@ -37,7 +37,7 @@ impl JwtService {
       username,
       exp: chrono::Utc::now()
         .checked_add_signed(chrono::Duration::hours(TOKEN_EXPIRATION_HOURS))
-        .unwrap()
+        .expect("token expiration duration does not overflow")
         .timestamp() as usize,
     };
     encode(
