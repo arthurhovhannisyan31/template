@@ -7,6 +7,7 @@ use crate::presentation::{
   utils::get_auth_cookie,
 };
 
+use crate::domain::user::User;
 use axum::{
   Json, Router,
   body::Body,
@@ -40,19 +41,8 @@ pub async fn login(
     .login(&payload.email, &payload.password)
     .await?;
   let user = auth_state.auth_service.get_by_email(&payload.email).await?;
-  let authenticated_user = AuthenticatedUser {
-    user_id: user.id,
-    email: user.email,
-    username: user.username,
-  };
 
-  let response = json!(AuthResponse {
-    user: authenticated_user,
-    token: token.clone(),
-  })
-  .to_string();
-
-  build_auth_response(token.clone(), response, app_config)
+  build_auth_response(token.clone(), user, app_config.is_production)
 }
 
 #[utoipa::path(
@@ -79,35 +69,32 @@ async fn register(
     .auth_service
     .login(&payload.email, &payload.password)
     .await?;
+
+  build_auth_response(token.clone(), user, app_config.is_production)
+}
+
+fn build_auth_response(
+  token: String,
+  user: User,
+  is_production: bool,
+) -> Result<impl IntoResponse, ApplicationError> {
   let authenticated_user = AuthenticatedUser {
     user_id: user.id,
     email: user.email,
     username: user.username,
   };
-
-  let response = json!(AuthResponse {
+  let response_body = json!(AuthResponse {
     user: authenticated_user,
     token: token.clone(),
   })
   .to_string();
 
-  build_auth_response(token.clone(), response, app_config)
-}
-
-fn build_auth_response(
-  token: String,
-  response: String,
-  app_config: Arc<AppConfig>,
-) -> Result<impl IntoResponse, ApplicationError> {
-  let response = Response::builder()
+  Response::builder()
     .status(StatusCode::CREATED)
-    .header("Access-Control-Allow-Credentials", "true")
     .header(
       SET_COOKIE,
-      get_auth_cookie(&token, app_config.is_production).to_string(),
+      get_auth_cookie(&token, is_production).to_string(),
     )
-    .body(Body::from(response))
-    .map_err(|err| ApplicationError::Internal(err.to_string()))?;
-
-  Ok(response)
+    .body(Body::from(response_body))
+    .map_err(|err| ApplicationError::Internal(err.to_string()))
 }
