@@ -39,7 +39,7 @@ pub async fn login(
     .await?;
   let user = auth_state.auth_service.get_by_email(&payload.email).await?;
 
-  build_auth_response(token.clone(), user)
+  build_auth_response(StatusCode::OK, token.clone(), user)
 }
 
 #[utoipa::path(
@@ -63,13 +63,14 @@ async fn register(
 
   let token = auth_state
     .jwt_service
-    .generate_token(user.id, user.username.clone())
+    .generate_token(user.id.clone(), user.username.clone())
     .map_err(|err| ApplicationError::Internal(err.to_string()))?;
 
-  build_auth_response(token.clone(), user)
+  build_auth_response(StatusCode::CREATED, token.clone(), user)
 }
 
 fn build_auth_response(
+  status: StatusCode,
   token: String,
   user: User,
 ) -> Result<impl IntoResponse, ApplicationError> {
@@ -85,7 +86,7 @@ fn build_auth_response(
   .to_string();
 
   Response::builder()
-    .status(StatusCode::CREATED)
+    .status(status)
     .body(Body::from(response_body))
     .map_err(|err| ApplicationError::Internal(err.to_string()))
 }

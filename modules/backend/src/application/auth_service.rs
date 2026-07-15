@@ -1,9 +1,8 @@
 use crate::application::error::ApplicationError;
 use crate::data::user_repository::UserRepository;
 use crate::domain::user::User;
+use crate::domain::user::UserId;
 use crate::infrastructure::jwt::{JwtService, hash_password, verify_password};
-
-use uuid::Uuid;
 
 #[derive(Clone)]
 pub struct AuthService<R: UserRepository + 'static> {
@@ -19,10 +18,10 @@ where
     Self { repo, jwt_service }
   }
 
-  pub async fn get(&self, id: Uuid) -> Result<User, ApplicationError> {
+  pub async fn get(&self, id: UserId) -> Result<User, ApplicationError> {
     self
       .repo
-      .find_by_id(id)
+      .find_by_id(id.clone())
       .await?
       .ok_or_else(|| ApplicationError::NotFound(format!("user {}", id)))
   }
