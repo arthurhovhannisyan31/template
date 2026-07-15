@@ -12,7 +12,7 @@ pub async fn authenticate_user(
   let user = auth_service.get(claims.user_id).await.ok()?;
 
   Some(AuthenticatedUser {
-    user_id: user.id,
+    user_id: user.id.to_string(),
     username: user.username,
     email: user.email,
   })

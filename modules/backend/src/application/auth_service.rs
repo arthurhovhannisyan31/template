@@ -3,6 +3,8 @@ use crate::data::user_repository::UserRepository;
 use crate::domain::user::User;
 use crate::infrastructure::jwt::{JwtService, hash_password, verify_password};
 
+use uuid::Uuid;
+
 #[derive(Clone)]
 pub struct AuthService<R: UserRepository + 'static> {
   repo: R,
@@ -17,7 +19,7 @@ where
     Self { repo, jwt_service }
   }
 
-  pub async fn get(&self, id: i64) -> Result<User, ApplicationError> {
+  pub async fn get(&self, id: Uuid) -> Result<User, ApplicationError> {
     self
       .repo
       .find_by_id(id)

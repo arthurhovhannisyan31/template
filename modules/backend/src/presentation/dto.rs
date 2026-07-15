@@ -11,7 +11,7 @@ pub struct CreateUserRequest {
 #[derive(Debug, Clone, Serialize, ToSchema)]
 pub struct AuthenticatedUser {
   pub email: String,
-  pub user_id: i64,
+  pub user_id: String,
   pub username: String,
 }
 

@@ -1,11 +1,11 @@
 use crate::application::error::ApplicationError;
+use crate::domain::user::User;
 use crate::presentation::{
   dto::{AuthRequest, AuthResponse, AuthenticatedUser, CreateUserRequest},
   state::AppState,
   state::AuthState,
 };
 
-use crate::domain::user::User;
 use axum::{
   Json, Router,
   body::Body,
@@ -74,7 +74,7 @@ fn build_auth_response(
   user: User,
 ) -> Result<impl IntoResponse, ApplicationError> {
   let authenticated_user = AuthenticatedUser {
-    user_id: user.id,
+    user_id: user.id.to_string(),
     email: user.email,
     username: user.username,
   };

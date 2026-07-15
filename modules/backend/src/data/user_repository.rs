@@ -1,10 +1,11 @@
-use async_trait::async_trait;
-use sqlx::PgPool;
-use tracing::{error, info};
-
 use crate::data::constants::db_constraints;
 use crate::domain::error::DomainError;
 use crate::domain::user::User;
+
+use async_trait::async_trait;
+use sqlx::PgPool;
+use tracing::{error, info};
+use uuid::Uuid;
 
 #[async_trait]
 pub trait UserRepository: Send + Sync {
@@ -13,7 +14,7 @@ pub trait UserRepository: Send + Sync {
     &self,
     email: &str,
   ) -> Result<Option<User>, DomainError>;
-  async fn find_by_id(&self, id: i64) -> Result<Option<User>, DomainError>;
+  async fn find_by_id(&self, id: Uuid) -> Result<Option<User>, DomainError>;
 }
 
 #[derive(Clone)]
@@ -83,7 +84,7 @@ impl UserRepository for PostgresUserRepository {
 
     Ok(row)
   }
-  async fn find_by_id(&self, id: i64) -> Result<Option<User>, DomainError> {
+  async fn find_by_id(&self, id: Uuid) -> Result<Option<User>, DomainError> {
     let row = sqlx::query_as!(
       User,
       r#"

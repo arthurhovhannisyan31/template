@@ -33,4 +33,4 @@ Origin: some
 ### Get data from protected route
 GET {{api_host}}/protected
 Content-Type: application/json
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoxLCJ1c2VybmFtZSI6InRlc3QiLCJleHAiOjE3ODM5NDQyMzh9.X8Lg8Ns7I271W8xoDlLdPDOxAIciM-sa2WrfXNioJG8
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoiM2I0NThiMTMtNmVkOS00YmJiLWIwYmUtZjUzNWFjMGMyZmYxIiwidXNlcm5hbWUiOiJ0ZXN0IiwiZXhwIjoxNzg0MjI4NjI2fQ.xguhdukorgCicEt6h0rFGh7KiZoOy8kN4pGt4hb3bbo
