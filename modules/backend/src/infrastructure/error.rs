@@ -9,9 +9,9 @@ pub enum ServerError {
   IO(#[from] io::Error),
   #[error("Parse int error")]
   ParseIntError(#[from] ParseIntError),
-  #[error("Sqlx error")]
+  #[error("Sqlx error: {0}")]
   SqlxError(String),
-  #[error("Failed to read env variable")]
+  #[error("Failed to read env variable: {0}")]
   VarError(String),
   #[error("Failed loading .env file")]
   Dotenv(#[from] dotenvy::Error),
