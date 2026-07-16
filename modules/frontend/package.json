@@ -12,7 +12,9 @@
     "start": "next start",
     "lint": "biome check",
     "format": "biome format --write",
-    "prepare": "./configs/scripts/generate-openapi.sh"
+    "prepare": "./configs/scripts/generate-openapi.sh",
+    "types": "NODE_OPTIONS=--max-old-space-size=8196 tsc -p tsconfig.json --noEmit",
+    "check": "yarn types && yarn lint"
   },
   "dependencies": {
     "@hey-api/openapi-ts": "^0.99.0",

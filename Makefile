@@ -1,4 +1,4 @@
-.PHONY: prepare prepare-backend prepare-frontend check check-quiet format format-check test audit backend frontend cargo-update
+.PHONY: prepare prepare-backend prepare-frontend check check-ci check-quiet format format-check test test-ci audit backend frontend cargo-update
 
 prepare:
 	./configs/git/setup.sh
@@ -14,10 +14,13 @@ frontend:
 	cd modules/frontend && yarn dev
 check:
 	cd modules/backend && cargo clippy
+	cd modules/frontend && yarn check
 check-ci:
 	cd modules/backend && cargo clippy --all-features --all-targets --quiet
+	cd modules/frontend && yarn check
 format:
 	cd modules/backend && cargo fmt
+	cd modules/frontend && yarn format
 format-check:
 	cd modules/backend && ../../configs/scripts/cargo-fmt.sh
 test:
@@ -27,5 +30,6 @@ test-ci:
 	cd modules/backend && cargo test
 audit:
 	cd modules/backend && cargo audit
+	cd modules/frontend && yarn npm audit
 cargo-update:
 	cd modules/backend && cargo update
