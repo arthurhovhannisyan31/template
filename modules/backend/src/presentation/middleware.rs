@@ -34,3 +34,31 @@ fn get_token(headers: &HeaderMap) -> Option<&str> {
   let (scheme, token) = auth_header.split_once(" ")?;
   (scheme.eq_ignore_ascii_case("bearer")).then_some(token)
 }
+
+#[cfg(test)]
+mod tests {
+  use super::*;
+  use axum::http::{HeaderMap, HeaderValue, header};
+
+  #[test]
+  fn extracts_bearer_token() {
+    let mut headers = HeaderMap::new();
+    headers.insert(
+      header::AUTHORIZATION,
+      HeaderValue::from_static("Bearer abc123"),
+    );
+    assert_eq!(get_token(&headers), Some("abc123"));
+  }
+
+  #[test]
+  fn rejects_missing_header() {
+    assert_eq!(get_token(&HeaderMap::new()), None);
+  }
+
+  #[test]
+  fn rejects_malformed_header() {
+    let mut headers = HeaderMap::new();
+    headers.insert(header::AUTHORIZATION, HeaderValue::from_static("abc123"));
+    assert_eq!(get_token(&headers), None);
+  }
+}
