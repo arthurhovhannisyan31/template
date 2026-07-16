@@ -544,6 +544,22 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/lodash-es@npm:^4":
+  version: 4.17.12
+  resolution: "@types/lodash-es@npm:4.17.12"
+  dependencies:
+    "@types/lodash": "npm:*"
+  checksum: 10/56b9a433348b11c31051c6fa9028540a033a08fb80b400c589d740446c19444d73b217cf1471d4036448ef686a83e8cf2a35d1fadcb3f2105f26701f94aebb07
+  languageName: node
+  linkType: hard
+
+"@types/lodash@npm:*, @types/lodash@npm:^4":
+  version: 4.17.24
+  resolution: "@types/lodash@npm:4.17.24"
+  checksum: 10/0f2082565f60f9787eefc046edc38458054512be5a8b3584ef0bad5fd9e85d0ab55ec5a1fbfae1ed6ba015cf1f9e837d5fb4da1f99fc60b8f74b2a46146fb00f
+  languageName: node
+  linkType: hard
+
 "@types/node@npm:^26":
   version: 26.1.1
   resolution: "@types/node@npm:26.1.1"
@@ -767,11 +783,15 @@ __metadata:
     "@biomejs/biome": "npm:2.5.3"
     "@hey-api/openapi-ts": "npm:^0.99.0"
     "@tanstack/react-query": "npm:^5.101.2"
+    "@types/lodash": "npm:^4"
+    "@types/lodash-es": "npm:^4"
     "@types/node": "npm:^26"
     "@types/react": "npm:^19"
     "@types/react-dom": "npm:^19"
     babel-plugin-react-compiler: "npm:1.0.0"
     jotai: "npm:^2.20.1"
+    lodash: "npm:^4.18.1"
+    lodash-es: "npm:^4.18.1"
     next: "npm:16.2.10"
     react: "npm:19.2.7"
     react-dom: "npm:19.2.7"
@@ -879,6 +899,20 @@ __metadata:
   bin:
     js-yaml: bin/js-yaml.js
   checksum: 10/51de2067a2b44b07ba5206132e56005f8b568ff279bb4d2f645068958c56fa4827d40a6841c983234671fa0a134bf094d0b0717873c2a3d319185297af145a6d
+  languageName: node
+  linkType: hard
+
+"lodash-es@npm:^4.18.1":
+  version: 4.18.1
+  resolution: "lodash-es@npm:4.18.1"
+  checksum: 10/8bfad225ef09ef42b04283cdaf7830efcc2ba29ae41b56501c74422155ee1ccaa1f0f6e8319def3451a1fe54dec501c8e4bee622bae2b2d98ac993731e0a5cce
+  languageName: node
+  linkType: hard
+
+"lodash@npm:^4.18.1":
+  version: 4.18.1
+  resolution: "lodash@npm:4.18.1"
+  checksum: 10/306fea53dfd39dad1f03d45ba654a2405aebd35797b673077f401edb7df2543623dc44b9effbb98f69b32152295fff725a4cec99c684098947430600c6af0c3f
   languageName: node
   linkType: hard
 
