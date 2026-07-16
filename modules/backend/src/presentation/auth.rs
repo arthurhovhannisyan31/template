@@ -1,5 +1,6 @@
 use crate::application::error::ApplicationError;
 use crate::domain::user::User;
+use crate::presentation::constants::routes;
 use crate::presentation::{
   dto::{AuthRequest, AuthResponse, AuthenticatedUser, CreateUserRequest},
   state::AppState,
@@ -20,13 +21,13 @@ use tracing::info;
 
 pub fn get_auth_router() -> Router<AppState> {
   Router::new()
-    .route("/auth/login", post(login))
-    .route("/auth/register", post(register))
+    .route(routes::LOGIN, post(login))
+    .route(routes::REGISTER, post(register))
 }
 
 #[utoipa::path(
   post,
-  path = "/auth/login",
+  path = routes::LOGIN,
   responses((status = OK, body = AuthResponse))
 )]
 pub async fn login(
@@ -44,7 +45,7 @@ pub async fn login(
 
 #[utoipa::path(
   post,
-  path = "/auth/register",
+  path = routes::REGISTER,
   responses((status = OK, body = AuthResponse))
 )]
 async fn register(

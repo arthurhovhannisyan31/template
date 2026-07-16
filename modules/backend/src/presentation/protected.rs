@@ -1,3 +1,4 @@
+use crate::presentation::constants::routes;
 use crate::presentation::state::AppState;
 use crate::presentation::{dto::AuthenticatedUser, middleware::auth};
 
@@ -7,13 +8,13 @@ use serde_json::{Value, json};
 
 pub fn get_protected_router(app_state: AppState) -> Router<AppState> {
   Router::new()
-    .route("/protected", get(protected))
+    .route(routes::PROTECTED, get(protected))
     .layer(middleware::from_fn_with_state(app_state, auth))
 }
 
 #[utoipa::path(
   get,
-  path = "/protected",
+  path = routes::PROTECTED,
   responses((status = OK, body = Value))
 )]
 async fn protected(
