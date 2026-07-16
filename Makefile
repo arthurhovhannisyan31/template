@@ -11,7 +11,8 @@ format:
 format-check:
 	cd modules/backend && ../../configs/scripts/cargo-fmt.sh
 test:
-	cd modules/backend && cargo test && cargo test -- --ignored
+	#cd modules/backend && cargo test && cargo test -- --ignored # add virtual postgres for stable API tests
+	cd modules/backend && cargo test
 test-ci:
 	cd modules/backend && cargo test
 audit:

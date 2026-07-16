@@ -1,10 +1,11 @@
-use async_trait::async_trait;
-use sqlx::PgPool;
-use tracing::{error, info};
-
 use crate::data::constants::db_constraints;
 use crate::domain::error::DomainError;
 use crate::domain::user::User;
+
+use crate::domain::user::UserId;
+use async_trait::async_trait;
+use sqlx::PgPool;
+use tracing::{error, info};
 
 #[async_trait]
 pub trait UserRepository: Send + Sync {
@@ -13,7 +14,7 @@ pub trait UserRepository: Send + Sync {
     &self,
     email: &str,
   ) -> Result<Option<User>, DomainError>;
-  async fn find_by_id(&self, id: i64) -> Result<Option<User>, DomainError>;
+  async fn find_by_id(&self, id: UserId) -> Result<Option<User>, DomainError>;
 }
 
 #[derive(Clone)]
@@ -35,7 +36,7 @@ impl UserRepository for PostgresUserRepository {
       r#"
         INSERT INTO users (username, email, password_hash)
         VALUES ($1, $2, $3)
-        RETURNING users.id, users.username, users.email, users.password_hash, users.created_at
+        RETURNING users.id as "id: UserId", users.username, users.email, users.password_hash, users.created_at
       "#,
       user.username,
       user.email,
@@ -53,7 +54,7 @@ impl UserRepository for PostgresUserRepository {
           })
           == Some(true)
         {
-          DomainError::UserAlreadyExists(user.id)
+          DomainError::UserAlreadyExists(user.email.clone())
         } else {
           DomainError::Internal(format!("database error: {}", e))
         }
@@ -69,7 +70,7 @@ impl UserRepository for PostgresUserRepository {
     let row = sqlx::query_as!(
       User,
       r#"
-        SELECT users.id, users.username, users.email, users.password_hash, users.created_at
+        SELECT users.id as "id: UserId", users.username, users.email, users.password_hash, users.created_at
         FROM users
         WHERE users.email = $1
       "#,
@@ -83,15 +84,15 @@ impl UserRepository for PostgresUserRepository {
 
     Ok(row)
   }
-  async fn find_by_id(&self, id: i64) -> Result<Option<User>, DomainError> {
+  async fn find_by_id(&self, id: UserId) -> Result<Option<User>, DomainError> {
     let row = sqlx::query_as!(
       User,
       r#"
-        SELECT users.id, users.username, users.email, users.password_hash, users.created_at
+        SELECT users.id as "id: UserId", users.username, users.email, users.password_hash, users.created_at
         FROM users
         WHERE users.id = $1
       "#,
-      id
+      id.0
     ).fetch_optional(&self.pool)
       .await
       .map_err(|e|{

@@ -1,9 +1,10 @@
-use crate::infrastructure::config::AppConfig;
-
 use axum::http::{HeaderValue, Method, header};
+use std::sync::Arc;
 use tower_http::cors::{AllowOrigin, CorsLayer};
 
-pub fn build_cors_layer(app_config: &AppConfig) -> CorsLayer {
+use crate::infrastructure::config::AppConfig;
+
+pub fn build_cors_layer(app_config: Arc<AppConfig>) -> CorsLayer {
   let origin_values: Vec<HeaderValue> = app_config
     .cors_origins
     .iter()

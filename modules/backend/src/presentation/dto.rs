@@ -1,17 +1,17 @@
 use serde::{Deserialize, Serialize};
 use utoipa::ToSchema;
 
-#[derive(Debug, Deserialize)]
+#[derive(Debug, Serialize, Deserialize)]
 pub struct CreateUserRequest {
   pub username: String,
   pub email: String,
   pub password: String,
 }
 
-#[derive(Debug, Clone, Serialize, ToSchema)]
+#[derive(Debug, Clone, Deserialize, Serialize, ToSchema)]
 pub struct AuthenticatedUser {
   pub email: String,
-  pub user_id: i64,
+  pub user_id: String,
   pub username: String,
 }
 
@@ -21,7 +21,7 @@ pub struct AuthRequest {
   pub password: String,
 }
 
-#[derive(Debug, Serialize, ToSchema)]
+#[derive(Debug, Deserialize, Serialize, ToSchema)]
 pub struct AuthResponse {
   pub token: String,
   pub user: AuthenticatedUser,

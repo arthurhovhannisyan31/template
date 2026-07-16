@@ -3,9 +3,12 @@ use tracing::info;
 
 use crate::infrastructure::error::ServerError;
 
-pub async fn create_pool(database_url: &str) -> Result<PgPool, ServerError> {
+pub async fn create_pool(
+  database_url: &str,
+  db_max_connections: u32,
+) -> Result<PgPool, ServerError> {
   let pool = PgPoolOptions::new()
-    .max_connections(10000)
+    .max_connections(db_max_connections)
     .min_connections(2)
     .acquire_timeout(std::time::Duration::from_secs(5))
     .connect(database_url)

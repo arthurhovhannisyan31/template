@@ -49,8 +49,9 @@ impl IntoResponse for ApplicationError {
       ApplicationError::Unauthorized => {
         StatusCode::UNAUTHORIZED.into_response()
       }
-      ApplicationError::Validation(_) => {
-        StatusCode::BAD_REQUEST.into_response()
+      ApplicationError::Validation(msg) => {
+        (StatusCode::BAD_REQUEST, json!({"message": msg}).to_string())
+          .into_response()
       }
     }
   }
@@ -72,20 +73,6 @@ impl From<DomainError> for ApplicationError {
         ApplicationError::NotFound(format!("User not found: {}", id))
       }
       DomainError::Validation(msg) => ApplicationError::Validation(msg),
-    }
-  }
-}
-
-impl From<ApplicationError> for StatusCode {
-  fn from(value: ApplicationError) -> Self {
-    match value {
-      ApplicationError::BadRequest(_) => StatusCode::BAD_REQUEST,
-      ApplicationError::Conflict(_) => StatusCode::CONFLICT,
-      ApplicationError::Forbidden => StatusCode::FORBIDDEN,
-      ApplicationError::Internal(_) => StatusCode::INTERNAL_SERVER_ERROR,
-      ApplicationError::NotFound(_) => StatusCode::NOT_FOUND,
-      ApplicationError::Unauthorized => StatusCode::UNAUTHORIZED,
-      ApplicationError::Validation(_) => StatusCode::BAD_REQUEST,
     }
   }
 }

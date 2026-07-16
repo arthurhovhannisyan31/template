@@ -1,12 +1,12 @@
 {
   "db_name": "PostgreSQL",
-  "query": "\n        SELECT users.id, users.username, users.email, users.password_hash, users.created_at\n        FROM users\n        WHERE users.email = $1\n      ",
+  "query": "\n        SELECT users.id as \"id: UserId\", users.username, users.email, users.password_hash, users.created_at\n        FROM users\n        WHERE users.id = $1\n      ",
   "describe": {
     "columns": [
       {
         "ordinal": 0,
-        "name": "id",
-        "type_info": "Int8",
+        "name": "id: UserId",
+        "type_info": "Uuid",
         "origin": {
           "Table": {
             "table": "users",
@@ -61,7 +61,7 @@
     ],
     "parameters": {
       "Left": [
-        "Text"
+        "Uuid"
       ]
     },
     "nullable": [
@@ -72,5 +72,5 @@
       false
     ]
   },
-  "hash": "b1ffbdfaf081445155f927cbee97397d0baa8f870c7c630455bf75449ae362fd"
+  "hash": "84625bfa8f4a8b542711acfbb6225befd01bda9333d902736c3960e6459b6c49"
 }

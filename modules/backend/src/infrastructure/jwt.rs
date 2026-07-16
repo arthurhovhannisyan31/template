@@ -1,14 +1,17 @@
+use crate::domain::user::UserId;
+use crate::infrastructure::constants::TOKEN_EXPIRATION_HOURS;
+
 use argon2::{
   Argon2,
-  password_hash::{PasswordHash, PasswordHasher, PasswordVerifier, SaltString},
+  password_hash::{
+    PasswordHash, PasswordHasher, PasswordVerifier, SaltString,
+    rand_core::OsRng,
+  },
 };
 use jsonwebtoken::{
   DecodingKey, EncodingKey, Header, Validation, decode, encode,
 };
-use rand_core::OsRng;
 use serde::{Deserialize, Serialize};
-
-use crate::infrastructure::constants::TOKEN_EXPIRATION_HOURS;
 
 #[derive(Clone)]
 pub struct JwtService {
@@ -17,7 +20,7 @@ pub struct JwtService {
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct Claims {
-  pub user_id: i64,
+  pub user_id: UserId,
   pub username: String,
   pub exp: usize,
 }
@@ -29,7 +32,7 @@ impl JwtService {
 
   pub fn generate_token(
     &self,
-    user_id: i64,
+    user_id: UserId,
     username: String,
   ) -> Result<String, jsonwebtoken::errors::Error> {
     let claims = Claims {
@@ -37,7 +40,7 @@ impl JwtService {
       username,
       exp: chrono::Utc::now()
         .checked_add_signed(chrono::Duration::hours(TOKEN_EXPIRATION_HOURS))
-        .unwrap()
+        .expect("token expiration duration does not overflow")
         .timestamp() as usize,
     };
     encode(
