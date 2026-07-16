@@ -1,7 +1,17 @@
-.PHONY: prepare check check-quiet format format-check test audit backend
+.PHONY: prepare prepare-backend prepare-frontend check check-quiet format format-check test audit backend frontend cargo-update
 
 prepare:
 	./configs/git/setup.sh
+	make prepare-backend
+	#make prepare-frontend
+prepare-backend:
+	cd modules/backend && cargo sqlx prepare
+prepare-frontend:
+	cd modules/backend && yarn prepare
+backend:
+	cd modules/backend && cargo run
+frontend:
+	cd modules/frontend && yarn dev
 check:
 	cd modules/backend && cargo clippy
 check-ci:
@@ -17,7 +27,5 @@ test-ci:
 	cd modules/backend && cargo test
 audit:
 	cd modules/backend && cargo audit
-backend:
-	cd modules/backend && cargo run
 cargo-update:
 	cd modules/backend && cargo update
