@@ -2,6 +2,7 @@ use crate::infrastructure::constants::TOKEN_EXPIRATION_HOURS;
 
 use axum_extra::extract::cookie::{Cookie, SameSite};
 
+#[allow(dead_code)]
 pub fn get_auth_cookie(token: &str, is_secure: bool) -> Cookie<'static> {
   let mut cookie = Cookie::new("Authorization", format!("Bearer {token}"));
   cookie.set_path("/");
