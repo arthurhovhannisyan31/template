@@ -5,7 +5,7 @@
   "tsx": true,
   "tailwind": {
     "config": "",
-    "css": "src/app/globals.css",
+    "css": "app/globals.css",
     "baseColor": "neutral",
     "cssVariables": true,
     "prefix": ""
@@ -13,11 +13,11 @@
   "iconLibrary": "hugeicons",
   "rtl": false,
   "aliases": {
-    "components": "src/app/components",
-    "utils": "src/app/lib/utils",
-    "ui": "src/app/components/ui",
-    "lib": "src/app/lib",
-    "hooks": "src/app/hooks"
+    "components": "app/components",
+    "utils": "app/lib/utils",
+    "ui": "app/components/ui",
+    "lib": "app/lib",
+    "hooks": "app/hooks"
   },
   "menuColor": "default",
   "menuAccent": "subtle",

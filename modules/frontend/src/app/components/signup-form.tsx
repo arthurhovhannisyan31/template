@@ -28,7 +28,13 @@ export function SignupForm({ ...props }: React.ComponentProps<typeof Card>) {
           <FieldGroup>
             <Field>
               <FieldLabel htmlFor="name">Username</FieldLabel>
-              <Input id="name" type="text" placeholder="johndoe" required />
+              <Input
+                id="name"
+                type="text"
+                placeholder="johndoe"
+                autoComplete="username"
+                required
+              />
             </Field>
             <Field>
               <FieldLabel htmlFor="email">Email</FieldLabel>
@@ -36,6 +42,7 @@ export function SignupForm({ ...props }: React.ComponentProps<typeof Card>) {
                 id="email"
                 type="email"
                 placeholder="m@example.com"
+                autoComplete="email"
                 required
               />
               <FieldDescription>
@@ -45,7 +52,12 @@ export function SignupForm({ ...props }: React.ComponentProps<typeof Card>) {
             </Field>
             <Field>
               <FieldLabel htmlFor="password">Password</FieldLabel>
-              <Input id="password" type="password" required />
+              <Input
+                id="password"
+                type="password"
+                autoComplete="new-password"
+                required
+              />
               <FieldDescription>
                 Must be at least 8 characters long.
               </FieldDescription>
@@ -54,7 +66,12 @@ export function SignupForm({ ...props }: React.ComponentProps<typeof Card>) {
               <FieldLabel htmlFor="confirm-password">
                 Confirm Password
               </FieldLabel>
-              <Input id="confirm-password" type="password" required />
+              <Input
+                id="confirm-password"
+                type="password"
+                autoComplete="new-password"
+                required
+              />
               <FieldDescription>Please confirm your password.</FieldDescription>
             </Field>
             <FieldGroup>
