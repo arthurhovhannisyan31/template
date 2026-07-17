@@ -7,7 +7,7 @@ prepare:
 prepare-backend:
 	cd modules/backend && cargo sqlx prepare
 prepare-frontend:
-	cd modules/backend && yarn prepare
+	cd modules/frontend && yarn prepare
 backend:
 	cd modules/backend && cargo run
 frontend:
