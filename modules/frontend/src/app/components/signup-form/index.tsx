@@ -4,9 +4,9 @@ import { type SubmitHandler, useForm } from "react-hook-form";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
-  type LoginSchema,
-  loginSchema,
-} from "app/components/login-form/constants";
+  type SignupSchema,
+  signupSchema,
+} from "app/components/signup-form/constants";
 import { Button } from "app/components/ui/button";
 import {
   Card,
@@ -28,7 +28,7 @@ import { RootPath } from "app/configs/routes/constants";
 import { cn } from "app/lib/utils";
 import Link from "next/link";
 
-export function LoginForm({
+export function SignupForm({
   className,
   ...props
 }: React.ComponentProps<"div">) {
@@ -36,34 +36,45 @@ export function LoginForm({
     register,
     handleSubmit,
     formState: { errors, dirtyFields },
-  } = useForm<LoginSchema>({
+  } = useForm<SignupSchema>({
     defaultValues: {
+      username: "",
       email: "",
       password: "",
+      confirmPassword: "",
     },
     mode: "onTouched",
-    resolver: zodResolver(loginSchema),
+    resolver: zodResolver(signupSchema),
   });
 
-  const onSubmit: SubmitHandler<LoginSchema> = (data) => {
-    // TODO Continue here
+  const onSubmit: SubmitHandler<SignupSchema> = (data) =>
     console.log({
       data,
     });
-  };
 
   return (
     <div className={cn("flex flex-col gap-6", className)} {...props}>
-      <Card>
+      <Card {...props}>
         <CardHeader>
-          <CardTitle>Login to your account</CardTitle>
+          <CardTitle>Create an account</CardTitle>
           <CardDescription>
-            Enter your email below to login to your account
+            Enter your information below to create your account
           </CardDescription>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit(onSubmit)} autoComplete="off">
             <FieldGroup>
+              <Field>
+                <FieldLabel htmlFor="name">Username</FieldLabel>
+                <Input
+                  id="name"
+                  type="text"
+                  placeholder="johndoe"
+                  required
+                  {...register("username")}
+                />
+                <FieldError errors={[errors.username]} />
+              </Field>
               <Field>
                 <FieldLabel htmlFor="email">Email</FieldLabel>
                 <Input
@@ -74,11 +85,13 @@ export function LoginForm({
                   {...register("email")}
                 />
                 <FieldError errors={[errors.email]} />
+                <FieldDescription>
+                  We&apos;ll use this to contact you. We will not share your
+                  email with anyone else.
+                </FieldDescription>
               </Field>
               <Field>
-                <div className="flex items-center">
-                  <FieldLabel htmlFor="password">Password</FieldLabel>
-                </div>
+                <FieldLabel htmlFor="password">Password</FieldLabel>
                 <PasswordInput
                   id="password"
                   required
@@ -86,14 +99,34 @@ export function LoginForm({
                   {...register("password")}
                 />
                 <FieldError errors={[errors.password]} />
-              </Field>
-              <Field>
-                <Button type="submit">Login</Button>
-                <FieldDescription className="text-center">
-                  Don&apos;t have an account?{" "}
-                  <Link href={RootPath.Signup}>Sign up</Link>
+                <FieldDescription>
+                  Must be at least 8 characters long.
                 </FieldDescription>
               </Field>
+              <Field>
+                <FieldLabel htmlFor="confirm-password">
+                  Confirm Password
+                </FieldLabel>
+                <PasswordInput
+                  id="confirm-password"
+                  required
+                  isDirty={!!dirtyFields.confirmPassword}
+                  {...register("confirmPassword")}
+                />
+                <FieldError errors={[errors.confirmPassword]} />
+                <FieldDescription>
+                  Please confirm your password.
+                </FieldDescription>
+              </Field>
+              <FieldGroup>
+                <Field>
+                  <Button type="submit">Create Account</Button>
+                  <FieldDescription className="px-6 text-center">
+                    Already have an account?{" "}
+                    <Link href={RootPath.Login}>Sign in</Link>
+                  </FieldDescription>
+                </Field>
+              </FieldGroup>
             </FieldGroup>
           </form>
         </CardContent>

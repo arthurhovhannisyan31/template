@@ -5,4 +5,4 @@ export const loginSchema = zod.object({
   password: zod.string().min(8, "Password must be at least 8 characters long"),
 });
 
-export type FormSchema = zod.output<typeof loginSchema>;
+export type LoginSchema = zod.output<typeof loginSchema>;
