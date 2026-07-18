@@ -3,29 +3,26 @@
 import { type SubmitHandler, useForm } from "react-hook-form";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import {
-  type LoginSchema,
-  loginSchema,
-} from "app/components/login-form/constants";
-import { Button } from "app/components/ui/button";
+import { type LoginSchema, loginSchema } from "components/login-form/constants";
+import { Button } from "components/ui/button";
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from "app/components/ui/card";
+} from "components/ui/card";
 import {
   Field,
   FieldDescription,
   FieldError,
   FieldGroup,
   FieldLabel,
-} from "app/components/ui/field";
-import { Input } from "app/components/ui/input";
-import { PasswordInput } from "app/components/ui/password-input";
-import { RootPath } from "app/configs/routes/constants";
-import { cn } from "app/lib/utils";
+} from "components/ui/field";
+import { Input } from "components/ui/input";
+import { PasswordInput } from "components/ui/password-input";
+import { RootPath } from "configs/routes/constants";
+import { cn } from "lib/utils";
 import Link from "next/link";
 
 export function LoginForm({
@@ -62,7 +59,7 @@ export function LoginForm({
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <form onSubmit={handleSubmit(onSubmit)} autoComplete="off">
+          <form onSubmit={handleSubmit(onSubmit)}>
             <FieldGroup>
               <Field>
                 <FieldLabel htmlFor="email">Email</FieldLabel>
@@ -70,6 +67,7 @@ export function LoginForm({
                   id="email"
                   type="email"
                   placeholder="m@example.com"
+                  autoComplete="email"
                   required
                   {...register("email")}
                 />
@@ -83,6 +81,7 @@ export function LoginForm({
                   id="password"
                   required
                   isDirty={!!dirtyFields.password}
+                  autoComplete="current-password"
                   {...register("password")}
                 />
                 <FieldError errors={[errors.password]} />

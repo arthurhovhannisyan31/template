@@ -13,12 +13,12 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "app/components/ui/dropdown-menu";
+} from "components/ui/dropdown-menu";
 import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
-} from "app/components/ui/sidebar";
+} from "components/ui/sidebar";
 
 export function VersionSwitcher({
   versions,

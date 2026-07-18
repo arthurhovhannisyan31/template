@@ -6,25 +6,21 @@ import { mergeProps } from "@base-ui/react/merge-props";
 import { useRender } from "@base-ui/react/use-render";
 import { SidebarLeftIcon } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
-import { Button } from "app/components/ui/button";
-import { Input } from "app/components/ui/input";
-import { Separator } from "app/components/ui/separator";
+import { cva, type VariantProps } from "class-variance-authority";
+import { Button } from "components/ui/button";
+import { Input } from "components/ui/input";
+import { Separator } from "components/ui/separator";
 import {
   Sheet,
   SheetContent,
   SheetDescription,
   SheetHeader,
   SheetTitle,
-} from "app/components/ui/sheet";
-import { Skeleton } from "app/components/ui/skeleton";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger,
-} from "app/components/ui/tooltip";
-import { useIsMobile } from "app/hooks/use-mobile";
-import { cn } from "app/lib/utils";
-import { cva, type VariantProps } from "class-variance-authority";
+} from "components/ui/sheet";
+import { Skeleton } from "components/ui/skeleton";
+import { Tooltip, TooltipContent, TooltipTrigger } from "components/ui/tooltip";
+import { useIsMobile } from "hooks/use-mobile";
+import { cn } from "lib/utils";
 
 const SIDEBAR_COOKIE_NAME = "sidebar_state";
 const SIDEBAR_COOKIE_MAX_AGE = 60 * 60 * 24 * 7;
@@ -84,6 +80,7 @@ function SidebarProvider({
       }
 
       // This sets the cookie to keep the sidebar state.
+      // biome-ignore lint/suspicious/noDocumentCookie: not relevant
       document.cookie = `${SIDEBAR_COOKIE_NAME}=${openState}; path=/; max-age=${SIDEBAR_COOKIE_MAX_AGE}`;
     },
     [setOpenProp, open],

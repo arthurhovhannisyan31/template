@@ -1,6 +1,6 @@
 import type * as React from "react";
 
-import { SearchForm } from "app/components/search-form";
+import { SearchForm } from "components/search-form";
 import {
   Sidebar,
   SidebarContent,
@@ -12,8 +12,8 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
   SidebarRail,
-} from "app/components/ui/sidebar";
-import { VersionSwitcher } from "app/components/version-switcher";
+} from "components/ui/sidebar";
+import { VersionSwitcher } from "components/version-switcher";
 
 // This is sample data.
 const data = {

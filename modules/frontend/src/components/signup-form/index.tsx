@@ -6,26 +6,26 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import {
   type SignupSchema,
   signupSchema,
-} from "app/components/signup-form/constants";
-import { Button } from "app/components/ui/button";
+} from "components/signup-form/constants";
+import { Button } from "components/ui/button";
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from "app/components/ui/card";
+} from "components/ui/card";
 import {
   Field,
   FieldDescription,
   FieldError,
   FieldGroup,
   FieldLabel,
-} from "app/components/ui/field";
-import { Input } from "app/components/ui/input";
-import { PasswordInput } from "app/components/ui/password-input";
-import { RootPath } from "app/configs/routes/constants";
-import { cn } from "app/lib/utils";
+} from "components/ui/field";
+import { Input } from "components/ui/input";
+import { PasswordInput } from "components/ui/password-input";
+import { RootPath } from "configs/routes/constants";
+import { cn } from "lib/utils";
 import Link from "next/link";
 
 export function SignupForm({
@@ -62,7 +62,7 @@ export function SignupForm({
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <form onSubmit={handleSubmit(onSubmit)} autoComplete="off">
+          <form onSubmit={handleSubmit(onSubmit)}>
             <FieldGroup>
               <Field>
                 <FieldLabel htmlFor="name">Username</FieldLabel>
@@ -71,6 +71,7 @@ export function SignupForm({
                   type="text"
                   placeholder="johndoe"
                   required
+                  autoComplete="username"
                   {...register("username")}
                 />
                 <FieldError errors={[errors.username]} />
@@ -82,6 +83,7 @@ export function SignupForm({
                   type="email"
                   placeholder="m@example.com"
                   required
+                  autoComplete="email"
                   {...register("email")}
                 />
                 <FieldError errors={[errors.email]} />
@@ -96,6 +98,7 @@ export function SignupForm({
                   id="password"
                   required
                   isDirty={!!dirtyFields.password}
+                  autoComplete="new-password"
                   {...register("password")}
                 />
                 <FieldError errors={[errors.password]} />
@@ -111,6 +114,7 @@ export function SignupForm({
                   id="confirm-password"
                   required
                   isDirty={!!dirtyFields.confirmPassword}
+                  autoComplete="new-password"
                   {...register("confirmPassword")}
                 />
                 <FieldError errors={[errors.confirmPassword]} />

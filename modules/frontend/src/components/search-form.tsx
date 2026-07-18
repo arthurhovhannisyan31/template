@@ -2,12 +2,12 @@
 
 import { SearchIcon } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
-import { Label } from "app/components/ui/label";
+import { Label } from "components/ui/label";
 import {
   SidebarGroup,
   SidebarGroupContent,
   SidebarInput,
-} from "app/components/ui/sidebar";
+} from "components/ui/sidebar";
 
 export function SearchForm({ ...props }: React.ComponentProps<"form">) {
   return (
