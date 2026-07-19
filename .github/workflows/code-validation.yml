@@ -17,6 +17,8 @@ jobs:
         uses: actions/checkout@v7
       - name: Setup Cargo
         uses: ./.github/actions/setup-cargo
+      - name: Setup NodeJS
+        uses: ./.github/actions/setup-nodejs
       - name: Validate code
         run: |
           make check-ci

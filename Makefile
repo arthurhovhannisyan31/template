@@ -3,7 +3,7 @@
 prepare:
 	./configs/git/setup.sh
 	make prepare-backend
-	#make prepare-frontend
+	make prepare-frontend
 prepare-backend:
 	cd modules/backend && cargo sqlx prepare
 prepare-frontend:
@@ -17,7 +17,8 @@ check:
 	cd modules/frontend && yarn check
 check-ci:
 	cd modules/backend && cargo clippy --all-features --all-targets --quiet
-	cd modules/frontend && yarn check
+	#cd modules/frontend && yarn check # openapi server needs to be available online hence only check linter
+	cd modules/frontend && yarn lint
 format:
 	cd modules/backend && cargo fmt
 	cd modules/frontend && yarn format
