@@ -44,30 +44,20 @@ export function NavUser({
   const handleLogout = async () => {
     await authClient.signOut({
       fetchOptions: {
+        onRequest: () => {
+          setIsLoading(true);
+        },
         onSuccess: (_) => {
           router.push(`/${RootPath.SignIn}`);
           router.refresh();
         },
         onError: (_) => {
-          // show alert
+          setIsLoading(false);
+          // TODO Alert error
         },
       },
     });
   };
-
-  const {
-    data: session,
-    isPending, //loading state
-    error, //error object
-    refetch, //refetch the session
-  } = authClient.useSession();
-
-  console.log("NavUser", {
-    data: session,
-    isPending, //loading state
-    error, //error object
-    refetch, //refetch the session
-  });
 
   return (
     <SidebarMenu>
@@ -101,30 +91,13 @@ export function NavUser({
             sideOffset={4}
           >
             <DropdownMenuGroup>
-              <DropdownMenuLabel className="p-0 font-normal">
-                <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
-                  <Avatar className="size-8">
-                    <AvatarImage src={user.avatar} alt={user.name} />
-                    <AvatarFallback className="rounded-lg">CN</AvatarFallback>
-                  </Avatar>
-                  <div className="grid flex-1 text-left text-sm leading-tight">
-                    <span className="truncate font-medium">{user.name}</span>
-                    <span className="truncate text-xs text-muted-foreground">
-                      {user.email}
-                    </span>
-                  </div>
-                </div>
-              </DropdownMenuLabel>
-            </DropdownMenuGroup>
-            <DropdownMenuSeparator />
-            <DropdownMenuGroup>
               <DropdownMenuItem>
                 <HugeiconsIcon icon={UserCircle02Icon} strokeWidth={2} />
                 Account
               </DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
-            <DropdownMenuItem onClick={handleLogout}>
+            <DropdownMenuItem onClick={handleLogout} disabled={isLoading}>
               <HugeiconsIcon icon={Logout01Icon} strokeWidth={2} />
               Log out
             </DropdownMenuItem>

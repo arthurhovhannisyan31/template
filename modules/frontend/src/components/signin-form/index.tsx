@@ -59,22 +59,19 @@ export function SignInForm({
         callbackURL: "/",
       },
       {
-        onRequest: (ctx) => {
+        onRequest: () => {
           setIsLoading(true);
         },
         onSuccess: (ctx) => {
-          console.log("2");
-          setIsLoading(false);
           console.log("success context", ctx.data);
           console.log("redirect to main");
           // TODO Store token in some store to use in axios
           // Set user data to store, test if several calls to session cause several api calls
           router.push("/");
         },
-        onError: (ctx) => {
-          console.log("3");
+        onError: () => {
           setIsLoading(false);
-          console.log(ctx.error.message);
+          // TODO Alert error
         },
       },
     );
@@ -118,8 +115,9 @@ export function SignInForm({
                 <FieldError errors={[errors.password]} />
               </Field>
               <Field>
-                {/* TODO Disable button once request started */}
-                <Button type="submit">Login</Button>
+                <Button disabled={isLoading} type="submit">
+                  Login
+                </Button>
                 <FieldDescription className="text-center">
                   Don&apos;t have an account?{" "}
                   <Link href={RootPath.Signup}>Sign up</Link>
