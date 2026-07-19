@@ -70,7 +70,7 @@ export function SignupForm({
         onRequest: () => {
           setIsLoading(true);
         },
-        onSuccess: (ctx) => {
+        onSuccess: () => {
           // TODO Store token in some store to use in axios
           // Set user data to store, test if several calls to session cause several api calls
           router.push("/");

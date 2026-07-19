@@ -23,7 +23,6 @@ import {
   SidebarMenuItem,
 } from "components/ui/sidebar";
 import { RootPath } from "configs/routes/constants";
-import { authClient } from "lib/auth-client";
 import Link from "next/link";
 
 const data = {
@@ -59,20 +58,6 @@ const data = {
 };
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
-  const {
-    data: session,
-    isPending, //loading state
-    error, //error object
-    refetch, //refetch the session
-  } = authClient.useSession();
-
-  console.log("AppSidebar", {
-    data: session,
-    isPending, //loading state
-    error, //error object
-    refetch, //refetch the session
-  });
-
   return (
     <Sidebar collapsible="offcanvas" {...props}>
       <SidebarHeader>

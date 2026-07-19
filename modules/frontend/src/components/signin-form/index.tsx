@@ -63,11 +63,7 @@ export function SignInForm({
         onRequest: () => {
           setIsLoading(true);
         },
-        onSuccess: (ctx) => {
-          console.log("success context", ctx.data);
-          console.log("redirect to main");
-          // TODO Store token in some store to use in axios
-          // Set user data to store, test if several calls to session cause several api calls
+        onSuccess: () => {
           router.push("/");
         },
         onError: (ctx) => {
