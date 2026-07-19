@@ -1,0 +1,26 @@
+name: "Setup NodeJS"
+description: "Install NodeJS and enable yarn"
+
+runs:
+  using: "composite"
+  steps:
+    - name: Enable yarn
+      shell: bash
+      run: corepack enable
+    - name: Install NodeJS
+      uses: actions/setup-node@v4
+      with:
+        node-version: 24.13.1
+    - name: Restore dependencies
+      id: restore-dependencies
+      uses: actions/cache@v5
+      with:
+        path: modules/frontend/node_modules
+        key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+        restore-keys: |
+          ${{ runner.os }}-yarn-
+    - name: Install Packages
+      if: ${{ steps.restore-dependencies.outputs.cache-hit != 'true' }}
+      run: yarn
+      shell: bash
+      working-directory: ${{ github.workspace }}/modules/frontend
