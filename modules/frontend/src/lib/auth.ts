@@ -19,10 +19,8 @@ export const auth = betterAuth({
   secret: BETTER_AUTH_SECRET,
   session: {
     expiresIn: 60 * 60 * 24 * 7, // 7 days
-    additionalFields: {
-      backendJwt: { type: "string" },
-    },
     cookieCache: {
+      strategy: "jwt",
       enabled: true,
       maxAge: 60 * 60 * 24 * 7, // 7 days
     },
@@ -79,3 +77,5 @@ export const auth = betterAuth({
     } satisfies BetterAuthPlugin,
   ],
 });
+
+export type AuthSession = typeof auth.$Infer.Session;
