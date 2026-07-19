@@ -22,6 +22,7 @@
       "*": ["./src/*"]
     }
   },
+  "typeRoots": ["node_modules/@types", "./src/typings"],
   "include": [
     "next-env.d.ts",
     "**/*.ts",
