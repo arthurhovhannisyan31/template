@@ -1,12 +1,12 @@
 /** biome-ignore-all lint/style/useLiteralEnumMembers: not relevant */
 export enum RootKeys {
   Dashboard = "",
-  Login = "login",
+  SignIn = "signin",
   Signup = "signup",
 }
 
 export enum RootPath {
   Dashboard = RootKeys.Dashboard,
-  Login = RootKeys.Login,
+  SignIn = RootKeys.SignIn,
   Signup = RootKeys.Signup,
 }

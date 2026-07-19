@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import { type SubmitHandler, useForm } from "react-hook-form";
 
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -25,13 +26,18 @@ import {
 import { Input } from "components/ui/input";
 import { PasswordInput } from "components/ui/password-input";
 import { RootPath } from "configs/routes/constants";
+import { authClient } from "lib/auth-client";
 import { cn } from "lib/utils";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 export function SignupForm({
   className,
   ...props
 }: React.ComponentProps<"div">) {
+  const [isLoading, setIsLoading] = useState(false);
+  const router = useRouter();
+
   const {
     register,
     handleSubmit,
@@ -47,10 +53,40 @@ export function SignupForm({
     resolver: zodResolver(signupSchema),
   });
 
-  const onSubmit: SubmitHandler<SignupSchema> = (data) =>
-    console.log({
-      data,
-    });
+  const onSubmit: SubmitHandler<SignupSchema> = async ({
+    email,
+    password,
+    username,
+  }) => {
+    await authClient.signUp.email(
+      {
+        email,
+        password,
+        name: username,
+        callbackURL: "/",
+      },
+      {
+        onRequest: (ctx) => {
+          setIsLoading(true);
+        },
+        onSuccess: (ctx) => {
+          console.log("2");
+          setIsLoading(false);
+          console.log("success context", ctx.data);
+          console.log("redirect to main");
+          // TODO Store token in some store to use in axios
+          // Set user data to store, test if several calls to session cause several api calls
+          router.push("/");
+        },
+        onError: (ctx) => {
+          console.log("3");
+          setIsLoading(false);
+          console.log(ctx.error.message);
+          // Show alert
+        },
+      },
+    );
+  };
 
   return (
     <div className={cn("flex flex-col gap-6", className)} {...props}>
@@ -127,7 +163,7 @@ export function SignupForm({
                   <Button type="submit">Create Account</Button>
                   <FieldDescription className="px-6 text-center">
                     Already have an account?{" "}
-                    <Link href={RootPath.Login}>Sign in</Link>
+                    <Link href={RootPath.SignIn}>Sign in</Link>
                   </FieldDescription>
                 </Field>
               </FieldGroup>

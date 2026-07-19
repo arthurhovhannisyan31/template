@@ -1,9 +1,13 @@
 "use client";
 
+import { useState } from "react";
 import { type SubmitHandler, useForm } from "react-hook-form";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { type LoginSchema, loginSchema } from "components/login-form/constants";
+import {
+  type SignInSchema,
+  signInSchema,
+} from "components/signin-form/constants";
 import { Button } from "components/ui/button";
 import {
   Card,
@@ -22,31 +26,58 @@ import {
 import { Input } from "components/ui/input";
 import { PasswordInput } from "components/ui/password-input";
 import { RootPath } from "configs/routes/constants";
+import { authClient } from "lib/auth-client";
 import { cn } from "lib/utils";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
-export function LoginForm({
+export function SignInForm({
   className,
   ...props
 }: React.ComponentProps<"div">) {
+  const [isLoading, setIsLoading] = useState(false);
+  const router = useRouter();
+
   const {
     register,
     handleSubmit,
     formState: { errors, dirtyFields },
-  } = useForm<LoginSchema>({
+  } = useForm<SignInSchema>({
     defaultValues: {
       email: "",
       password: "",
     },
     mode: "onTouched",
-    resolver: zodResolver(loginSchema),
+    resolver: zodResolver(signInSchema),
   });
 
-  const onSubmit: SubmitHandler<LoginSchema> = (data) => {
-    // TODO Continue here
-    console.log({
-      data,
-    });
+  const onSubmit: SubmitHandler<SignInSchema> = async ({ email, password }) => {
+    await authClient.signIn.email(
+      {
+        email,
+        password,
+        callbackURL: "/",
+      },
+      {
+        onRequest: (ctx) => {
+          setIsLoading(true);
+        },
+        onSuccess: (ctx) => {
+          console.log("2");
+          setIsLoading(false);
+          console.log("success context", ctx.data);
+          console.log("redirect to main");
+          // TODO Store token in some store to use in axios
+          // Set user data to store, test if several calls to session cause several api calls
+          router.push("/");
+        },
+        onError: (ctx) => {
+          console.log("3");
+          setIsLoading(false);
+          console.log(ctx.error.message);
+        },
+      },
+    );
   };
 
   return (
@@ -87,6 +118,7 @@ export function LoginForm({
                 <FieldError errors={[errors.password]} />
               </Field>
               <Field>
+                {/* TODO Disable button once request started */}
                 <Button type="submit">Login</Button>
                 <FieldDescription className="text-center">
                   Don&apos;t have an account?{" "}
