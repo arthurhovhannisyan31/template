@@ -14,7 +14,6 @@ import {
   DropdownMenuContent,
   DropdownMenuGroup,
   DropdownMenuItem,
-  DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "components/ui/dropdown-menu";
@@ -27,6 +26,7 @@ import {
 import { RootPath } from "configs/routes/constants";
 import { authClient } from "lib/auth-client";
 import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 
 export function NavUser({
   user,
@@ -51,9 +51,11 @@ export function NavUser({
           router.push(`/${RootPath.SignIn}`);
           router.refresh();
         },
-        onError: (_) => {
+        onError: (ctx) => {
           setIsLoading(false);
-          // TODO Alert error
+          toast.error(
+            (ctx.error.message || ctx.response.statusText).toString(),
+          );
         },
       },
     });

@@ -30,6 +30,7 @@ import { authClient } from "lib/auth-client";
 import { cn } from "lib/utils";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 
 export function SignupForm({
   className,
@@ -74,9 +75,11 @@ export function SignupForm({
           // Set user data to store, test if several calls to session cause several api calls
           router.push("/");
         },
-        onError: () => {
-          // TODO Alert error
+        onError: (ctx) => {
           setIsLoading(false);
+          toast.error(
+            (ctx.error.message || ctx.response.statusText).toString(),
+          );
         },
       },
     );

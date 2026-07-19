@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import type { ReactNode } from "react";
 
+import { Toaster } from "components/ui/sonner";
 import { Geist, Geist_Mono, Inter } from "next/font/google";
 
 import "./globals.css";
@@ -41,7 +42,10 @@ export default function RootLayout({
       )}
     >
       <body>
-        <TooltipProvider>{children}</TooltipProvider>
+        <TooltipProvider>
+          {children}
+          <Toaster />
+        </TooltipProvider>
       </body>
     </html>
   );
