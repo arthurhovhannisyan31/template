@@ -6,19 +6,19 @@ import axios, {
   type InternalAxiosRequestConfig,
 } from "axios";
 import { RootPath } from "configs/routes/constants";
+import { getAuthData } from "hooks/useAuthData";
 import Router from "next/router";
 
 axios.interceptors.request.use(
   async (requestConfig: InternalAxiosRequestConfig) => {
-    // try {
-    // TODO configure seesion for requests
-    // const session: AuthSession = await sessionManager.fetchSession();
-    // if (session?.accessToken) {
-    //   requestConfig.headers.Authorization = `Bearer ${session.accessToken}`;
-    // }
-    // } catch (error) {
-    //   console.error(error);
-    // }
+    try {
+      const authData = getAuthData();
+      if (authData) {
+        requestConfig.headers.Authorization = `Bearer ${authData.token}`;
+      }
+    } catch (error) {
+      console.error(error);
+    }
 
     return requestConfig;
   },
