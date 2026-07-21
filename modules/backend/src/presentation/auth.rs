@@ -52,6 +52,9 @@ async fn register(
   State(auth_state): State<Arc<AuthState>>,
   Json(payload): Json<CreateUserRequest>,
 ) -> Result<impl IntoResponse, ApplicationError> {
+  // email
+  // password
+
   let user = auth_state
     .auth_service
     .register(
