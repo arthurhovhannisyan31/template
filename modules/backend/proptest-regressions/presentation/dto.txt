@@ -12,3 +12,4 @@ cc 8b44bf1483799e6305d00f872a52f7d5252d1be548b001f033fb4a09738b23b2 # shrinks to
 cc b50e3b80208a4c90e1d71563c87517f20bcc5b94939e52a9cf9b6afc09af95ae # shrinks to password = "A1_a]+a#", username = "aaAA00aa", email = "00a}@0aa.aaa"
 cc b4dc648026f5b627b511e349832a438dc378c9403526f7eb444801b0d5dbc67d # shrinks to password = "A1_aA(#a", username = "0aa0a0aa", email = "aa0?@0aa.aaa"
 cc fa851ded622963a52bffa83c1bf2b15e2a0eb0ded5368f86a658aa8bf5b29d2e # shrinks to password = "A1_a0(#A", username = "aaaA0000", email = "a0a=@a0a.aaa"
+cc c31f46f645c0a4d876e2fbfb6cd710f3f71140f4cef776ecbae73a2954a3494a # shrinks to password = "A1_a0a#a", username = "000aAAaa", email = "0a0!@a00.aaa"

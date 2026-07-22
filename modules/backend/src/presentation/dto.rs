@@ -129,23 +129,23 @@ mod test_create_user_request {
   }
 
   fn valid_password() -> impl Strategy<Value = String> {
-    string_regex("[a-zA-Z0-9@#$%^&(){}\\[\\]:;<>,?~_+-\\/|=]{4,96}")
+    string_regex("[a-zA-Z0-9*.!@#$%^&(){}\\[\\]:;<>,?~_+-\\/|=]{4,96}")
       .expect(INVALID_REGEX_ERROR)
       .prop_map(|base| format!("A1_a{}", base))
   }
 
   fn password_missing_uppercase() -> impl Strategy<Value = String> {
-    string_regex("[a-z0-9@#$%^&(){}\\[\\]:;<>,?~_+-\\/|=]{8,100}")
+    string_regex("[a-z0-9*.!@#$%^&(){}\\[\\]:;<>,?~_+-\\/|=]{8,100}")
       .expect(INVALID_REGEX_ERROR)
   }
 
   fn password_missing_lowercase() -> impl Strategy<Value = String> {
-    string_regex("[A-Z0-9@#$%^&(){}\\[\\]:;<>,?~_+-\\/|=]{8,100}")
+    string_regex("[A-Z0-9*.!@#$%^&(){}\\[\\]:;<>,?~_+-\\/|=]{8,100}")
       .expect(INVALID_REGEX_ERROR)
   }
 
   fn password_missing_numeric() -> impl Strategy<Value = String> {
-    string_regex("[a-zA-Z@#$%^&(){}\\[\\]:;<>,?~_+-\\/|=]{8,100}")
+    string_regex("[a-zA-Z*.!@#$%^&(){}\\[\\]:;<>,?~_+-\\/|=]{8,100}")
       .expect(INVALID_REGEX_ERROR)
   }
 
@@ -176,7 +176,7 @@ mod test_create_user_request {
   }
 
   fn username_is_not_alphanumeric() -> impl Strategy<Value = String> {
-    string_regex("[a-zA-Z0-9@#$%^&(){}\\[\\]:;<>,?~_+-\\/|=]{8,255}")
+    string_regex("[a-zA-Z0-9*.!@#$%^&(){}\\[\\]:;<>,?~_+-\\/|=]{8,255}")
       .expect(INVALID_REGEX_ERROR)
   }
 

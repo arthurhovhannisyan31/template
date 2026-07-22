@@ -66,8 +66,8 @@ impl From<DomainError> for ApplicationError {
       DomainError::PostNotFound(id) => {
         ApplicationError::NotFound(format!("Post not found: {}", id))
       }
-      DomainError::UserAlreadyExists(id) => {
-        ApplicationError::Conflict(format!("User already exists: {}", id))
+      DomainError::UserAlreadyExists => {
+        ApplicationError::Conflict("User already exists".to_string())
       }
       DomainError::UserNotFound(id) => {
         ApplicationError::NotFound(format!("User not found: {}", id))
