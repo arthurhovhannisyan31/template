@@ -18,6 +18,7 @@ use axum::{
 use serde_json::json;
 use std::sync::Arc;
 use tracing::info;
+use validator::Validate;
 
 pub fn get_auth_router() -> Router<AppState> {
   Router::new()
@@ -52,8 +53,7 @@ async fn register(
   State(auth_state): State<Arc<AuthState>>,
   Json(payload): Json<CreateUserRequest>,
 ) -> Result<impl IntoResponse, ApplicationError> {
-  // email
-  // password
+  payload.validate()?;
 
   let user = auth_state
     .auth_service

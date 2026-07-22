@@ -1,11 +1,11 @@
+use crate::domain::error::DomainError;
 use axum::{
   http::StatusCode,
   response::{IntoResponse, Response},
 };
 use serde_json::json;
 use thiserror::Error;
-
-use crate::domain::error::DomainError;
+use validator::ValidationErrors;
 
 #[derive(Debug, Error)]
 pub enum ApplicationError {
@@ -74,5 +74,11 @@ impl From<DomainError> for ApplicationError {
       }
       DomainError::Validation(msg) => ApplicationError::Validation(msg),
     }
+  }
+}
+
+impl From<ValidationErrors> for ApplicationError {
+  fn from(value: ValidationErrors) -> Self {
+    ApplicationError::BadRequest(format!(r"{value}"))
   }
 }

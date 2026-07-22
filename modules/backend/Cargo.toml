@@ -33,3 +33,4 @@ validator = { version = "0.20.0", features = ["derive"] }
 
 [dev-dependencies]
 axum-test = "21.0"
+proptest = { version = "1.11.0", features = ["regex-syntax"] }
