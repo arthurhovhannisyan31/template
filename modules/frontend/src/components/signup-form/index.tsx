@@ -90,14 +90,12 @@ export function SignupForm({
           setIsLoading(true);
         },
         onSuccess: () => {
-          // TODO Store token in some store to use in axios
-          // Set user data to store, test if several calls to session cause several api calls
           router.push("/");
         },
         onError: (ctx) => {
           setIsLoading(false);
           toast.error(
-            (ctx.error.message || ctx.response.statusText).toString(),
+            (ctx.error.error.message || ctx.response.statusText).toString(),
           );
         },
       },
