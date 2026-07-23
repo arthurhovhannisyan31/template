@@ -87,14 +87,14 @@ mod server_test {
   }
 
   #[sqlx::test]
-  async fn test_register_login(pool: PgPool) -> Result<(), ServerError> {
+  async fn test_register(pool: PgPool) -> Result<(), ServerError> {
     let router = setup_router(pool)?;
     let server = TestServer::new(router);
 
     let create_user_request = CreateUserRequest {
-      email: "email@email.com".into(),
-      username: "username".into(),
-      password: "Password1!".into(),
+      email: "test@test.com".into(),
+      username: "testtest".into(),
+      password: "Testtest1!".into(),
     };
     let response = server
       .post(&with_base_route(routes::REGISTER))
@@ -108,9 +108,17 @@ mod server_test {
     assert_eq!(auth_response.user.email, create_user_request.email);
     assert!(is_valid_v4_uuid(&auth_response.user.user_id));
 
+    Ok(())
+  }
+
+  #[sqlx::test(fixtures("create_user"))]
+  async fn test_login(pool: PgPool) -> Result<(), ServerError> {
+    let router = setup_router(pool)?;
+    let server = TestServer::new(router);
+
     let authentication_request = AuthRequest {
-      email: "email@email.com".into(),
-      password: "Password1!".into(),
+      email: "test@test.com".into(),
+      password: "Testtest1!".into(),
     };
 
     let response = server
@@ -121,34 +129,29 @@ mod server_test {
     let auth_response = response.json::<AuthResponse>();
 
     assert_eq!(response.status_code(), StatusCode::OK);
-    assert_eq!(auth_response.user.username, create_user_request.username);
-    assert_eq!(auth_response.user.email, create_user_request.email);
+    assert_eq!(auth_response.user.username, "testtest");
+    assert_eq!(auth_response.user.email, "test@test.com");
     assert!(is_valid_v4_uuid(&auth_response.user.user_id));
 
     Ok(())
   }
 
-  #[sqlx::test]
+  #[sqlx::test(fixtures("create_user"))]
   async fn test_protected(pool: PgPool) -> Result<(), ServerError> {
     let router = setup_router(pool)?;
     let server = TestServer::new(router);
 
-    let create_user_request = CreateUserRequest {
-      email: "email@email.com".into(),
-      username: "username".into(),
-      password: "Password1!".into(),
+    let authentication_request = AuthRequest {
+      email: "test@test.com".into(),
+      password: "Testtest1!".into(),
     };
+
     let response = server
-      .post(&with_base_route(routes::REGISTER))
-      .json(&json!(create_user_request))
+      .post(&with_base_route(routes::LOGIN))
+      .json(&json!(authentication_request))
       .expect_success()
       .await;
     let auth_response = response.json::<AuthResponse>();
-
-    assert_eq!(response.status_code(), StatusCode::CREATED);
-    assert_eq!(auth_response.user.username, create_user_request.username);
-    assert_eq!(auth_response.user.email, create_user_request.email);
-    assert!(is_valid_v4_uuid(&auth_response.user.user_id));
 
     let response = server
       .get(&with_base_route(routes::PROTECTED))
