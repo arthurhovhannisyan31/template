@@ -42,7 +42,7 @@ pub struct AuthenticatedUser {
   pub username: String,
 }
 
-#[derive(Debug, Deserialize)]
+#[derive(Debug, Deserialize, Serialize)]
 pub struct AuthRequest {
   pub email: String,
   pub password: String,
