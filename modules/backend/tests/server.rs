@@ -6,21 +6,19 @@ mod server_test {
   use backend::application::auth_service::AuthService;
   use backend::data::user_repository::PostgresUserRepository;
   use backend::infrastructure::{
-    config::AppConfig, database::create_pool, error::ServerError,
-    jwt::JwtService,
+    config::AppConfig, error::ServerError, jwt::JwtService,
   };
   use backend::presentation::constants::routes;
   use backend::presentation::dto::{AuthResponse, CreateUserRequest};
   use backend::presentation::state::AuthState;
   use backend::presentation::{init::build_router, state::AppState};
   use serde_json::json;
+  use sqlx::PgPool;
   use std::sync::Arc;
   use uuid::{Uuid, Version};
 
-  async fn setup_router() -> Result<Router, ServerError> {
+  fn setup_router(pool: PgPool) -> Result<Router, ServerError> {
     let app_config = AppConfig::from_env()?;
-    let pool = create_pool(&app_config.database_url, 1).await?;
-
     let jwt_service = JwtService::new(app_config.jwt_secret.clone());
     let users_repo = PostgresUserRepository::new(pool.clone());
     let auth_service = AuthService::new(users_repo, jwt_service.clone());
@@ -47,9 +45,10 @@ mod server_test {
   }
 
   #[ignore]
-  #[tokio::test]
-  async fn test_health_route() -> Result<(), ServerError> {
-    let router = setup_router().await?;
+  #[sqlx::test]
+  // sqlx::Result<()>
+  async fn test_health_route(pool: PgPool) -> Result<(), ServerError> {
+    let router = setup_router(pool)?;
     let server = TestServer::new(router);
 
     let response = server
@@ -67,9 +66,9 @@ mod server_test {
   }
 
   #[ignore]
-  #[tokio::test]
-  async fn test_openapi_route() -> Result<(), ServerError> {
-    let router = setup_router().await?;
+  #[sqlx::test]
+  async fn test_openapi_route(pool: PgPool) -> Result<(), ServerError> {
+    let router = setup_router(pool)?;
     let server = TestServer::new(router);
 
     let response = server
@@ -89,15 +88,15 @@ mod server_test {
   }
 
   #[ignore]
-  #[tokio::test]
-  async fn test_register_route() -> Result<(), ServerError> {
-    let router = setup_router().await?;
+  #[sqlx::test]
+  async fn test_register_route(pool: PgPool) -> Result<(), ServerError> {
+    let router = setup_router(pool)?;
     let server = TestServer::new(router);
 
     let create_user_request = CreateUserRequest {
-      email: "email".into(),
+      email: "email@email.com".into(),
       username: "username".into(),
-      password: "password".into(),
+      password: "Password1!".into(),
     };
     let response = server
       .post(&with_base_route(routes::REGISTER))
