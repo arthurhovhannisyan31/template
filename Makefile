@@ -1,4 +1,6 @@
-.PHONY: prepare prepare-backend prepare-frontend check check-ci check-quiet format format-check test test-ci audit backend frontend cargo-update
+.PHONY: prepare prepare-backend prepare-frontend check check-ci check-quiet format format-check test test-ci audit backend frontend cargo-update generate-openapi
+
+REPO_ROOT := $(shell git rev-parse --show-toplevel)
 
 prepare:
 	./configs/git/setup.sh
@@ -7,30 +9,26 @@ prepare:
 prepare-backend:
 	cd modules/backend && cargo sqlx prepare
 prepare-frontend:
-	cd modules/frontend && yarn prepare
+	./configs/scripts/generate-openapi-client.sh
 backend:
 	cd modules/backend && cargo run
 frontend:
 	cd modules/frontend && yarn dev
 check:
-	cd modules/backend && cargo clippy
-	cd modules/frontend && yarn check
-check-ci:
 	cd modules/backend && cargo clippy --all-features --all-targets --quiet
-	#cd modules/frontend && yarn check # openapi server needs to be available online hence only check linter
-	cd modules/frontend && yarn lint
+	cd modules/frontend && yarn check
 format:
 	cd modules/backend && cargo fmt
 	cd modules/frontend && yarn format
 format-check:
-	cd modules/backend && ../../configs/scripts/cargo-fmt.sh
+	cd modules/backend && $(REPO_ROOT)/configs/scripts/cargo-fmt.sh
 test:
 	#cd modules/backend && cargo test && cargo test -- --ignored # add virtual postgres for stable API tests
-	cd modules/backend && cargo test
-test-ci:
 	cd modules/backend && cargo test
 audit:
 	cd modules/backend && cargo audit
 	cd modules/frontend && yarn npm audit
 cargo-update:
 	cd modules/backend && cargo update
+generate-openapi:
+	cd modules/backend && cargo run --bin openapi-generator

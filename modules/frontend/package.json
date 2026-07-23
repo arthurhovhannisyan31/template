@@ -12,7 +12,6 @@
     "start": "next start",
     "lint": "biome check",
     "format": "biome check --write .",
-    "prepare": "./configs/scripts/generate-openapi.sh",
     "types": "NODE_OPTIONS=--max-old-space-size=8196 tsc -p tsconfig.json --noEmit",
     "check": "yarn types && yarn lint"
   },

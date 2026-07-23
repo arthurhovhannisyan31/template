@@ -19,12 +19,16 @@ jobs:
         uses: ./.github/actions/setup-cargo
       - name: Setup NodeJS
         uses: ./.github/actions/setup-nodejs
+      - name: Generate openapi spec and client
+        run: |
+          make generate-openapi
+          make prepare-frontend
       - name: Validate code
         run: |
-          make check-ci
+          make check
       - name: Validate linters
         run: |
           make format-check
       - name: Validate unit tests
         run: |
-          make test-ci
+          make test
