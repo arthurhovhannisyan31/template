@@ -9,7 +9,7 @@ prepare:
 prepare-backend:
 	cd modules/backend && cargo sqlx prepare
 prepare-frontend:
-	./configs/scripts/generate-openapi-client.sh
+	cd modules/frontend && yarn prepare
 backend:
 	cd modules/backend && cargo run
 frontend:
